@@ -34,3 +34,10 @@ $(document).keydown(function(event){
 $(document).keyup(function(event){
   keysDown.splice(keysDown.indexOf(event.which), 1);
 });
+
+//
+var worldSize = prompt("How big is the world?")
+
+//
+var world = [], [], [];
+for()
