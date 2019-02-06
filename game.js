@@ -1,3 +1,18 @@
+//load images in advance
+images = new Array()
+function preload() {
+	for (i = 0; i < preload.arguments.length; i++) {
+		images[i] = new Image()
+		images[i].src = preload.arguments[i]
+	}
+}
+preload(
+	"assets/images/stone.jpg"
+  "assets/images/coal_ore.jpg"
+  "assets/images/iron_ore.jpg"
+  "assets/images/gold_ore.jpg"
+)
+
 //create the canvas element
 var canvas = document.createElement("CANVAS");
 canvas.style.background = "#FFFFFF";
