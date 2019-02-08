@@ -1,16 +1,16 @@
 //load images in advance
 images = new Array()
-function preload() {
-	for (i = 0; i < preload.arguments.length; i++) {
+function preloadImages() {
+	for (i = 0; i < preloadImages.arguments.length; i++) {
 		images[i] = new Image()
-		images[i].src = preload.arguments[i]
+		images[i].src = preloadImages.arguments[i]
 	}
 }
-preload(
-	"assets/images/stone.jpg"
-  "assets/images/coal_ore.jpg"
-  "assets/images/iron_ore.jpg"
-  "assets/images/gold_ore.jpg"
+preloadImages(
+	"assets/images/stone.png",
+  "assets/images/coal_ore.png",
+  "assets/images/iron_ore.png",
+  "assets/images/gold_ore.png"
 )
 
 //create the canvas element
@@ -36,8 +36,15 @@ $(document).keyup(function(event){
 });
 
 //
-var worldSize = prompt("How big is the world?")
+var worldSize = parseInt(prompt("How big is the world?"));
 
 //
-var world = [], [], [];
-for()
+var world = [];
+for (x = 0; x < worldSize; x++) {
+	world[x] = [];
+	for (y = 0; y < worldSize; y++) {
+		world[x][y] = ["stone"]
+	}
+}
+
+console.log(world)
