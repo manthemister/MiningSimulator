@@ -1,7 +1,7 @@
 //load images in advance
-/*var images = [];
+var images = [];
 function loadImages() {
-	for (i = 0; i < loadImages.arguments.length; i++) {
+	for (let i = 0; i < loadImages.arguments.length; i++) {
 		images[i] = new Image();
 		images[i].src = loadImages.arguments[i];
 	}
@@ -11,17 +11,11 @@ loadImages(
   "assets/images/coal_ore.png",
   "assets/images/iron_ore.png",
   "assets/images/gold_ore.png"
-)*/
-var images = {
-	this.stone = new Image();
-		this.stone.src = "assets/images/stone.png"
-	this.coalOre = new Image();
-		this.coalOre.src = "assets/images/coal_ore.png"
-	this.ironOre = new Image();
-		this.ironOre.src = "assets/images/iron_ore.png"
-	this.goldOre = new Image();
-		this.goldOre.src = "assets/images/coal_ore.png"
-}
+)
+const stone = 0;
+const coalOre = 1;
+const ironOre = 2;
+const goldOre = 3;
 
 //create the canvas element
 var canvas = document.getElementById("canvas");
@@ -40,37 +34,44 @@ $(document).keyup(function(event){
 });
 
 //
+var worldSize;
 var worldSize = parseInt(prompt("How big is the world?"));
-
+var generationComplete = false;
+var world = [];
 function generateWorld() {
-	var world = []; //create grid
-	for (x = 0; x < worldSize; x++) {
+ //create grid
+	for (let x = 0; x < worldSize; x++) {
 		world[x] = [];
-		for (y = 0; y < worldSize; y++) {+
+		for (let y = 0; y < worldSize; y++) {
 			world[x][y] = 0;
 		}
 	}
+	generationComplete = true;
+	//
   var numVeins = Math.ceiling((Math.rand() * worldSize / 2) + worldSize / 3) //add ore veins
 	var veinPos, veinSize;
-	for (i = 0; i < numVeins; i++) {
+	for (let i = 0; i < numVeins; i++) {
 		veinPos = [Math.floor(Math.rand() * (worldSize + 1)), Math.floor(Math.rand() * (worldSize))];
 		veinSize = Math.floor((Math.rand() * 8) + 8);
-		for (i2 = 0; i2 < veinSize; i2++) {
+		for (let i2 = 0; i2 < veinSize; i2++) {
 			if (veinPos[0] >= 0 && veinPos[0] <= worldSize && veinPos[1] >= 0 && veinPos[1] <= worldSize) {
-				world[x][y] = 1;
+				world[veinPos[0][veinPos[1] = 1;
 			}
-			if (Math.floor(Math.rand() * 2) {
+			let veinMotion = Math.floor(Math.rand() * 3);
+			if (veinMotion == 0) {
 
 			}
 		}
 	}
+	//
 }
+generateWorld();
 
 var cameraPos = [0, 0]
 
 function drawTiles() {
-	for (x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
-		for (y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
+	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
+		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
 			ctx.drawImage(images[world[x][y]], (x - cameraPos[0]) * 32, (y - cameraPos[1]) * 32);
 		}
 	}
@@ -95,17 +96,14 @@ function tick() {
 	moveCamera();
 	ctx.clearRect(0, 0, 960, 720);
 	drawTiles();
+	console.log(world);
 }
 
-setInterval(tick, 25)
-/*
-var y_pos = 0;
-var MyImg = new Image();
-MyImg.src = "https://s2js.com/img/etc/cat_grumpy.png";
-
-function MyTimer () {
-  y_pos = y_pos + 1;
-  ctx.drawImage(MyImg, 130, 0);
+function detectLoading() {
+	if (images.length == 4 && generationComplete === true) {
+		clearInterval(detectLoadingTimer);
+		setInterval(tick, 25);
+	}
+	console.log(images)
 }
-setInterval(MyTimer, 40);
-*/
+var detectLoadingTimer = setInterval(detectLoading, 500);
