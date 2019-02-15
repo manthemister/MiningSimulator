@@ -1,5 +1,5 @@
 //load images in advance
-var images = [];
+/*var images = [];
 function loadImages() {
 	for (i = 0; i < loadImages.arguments.length; i++) {
 		images[i] = new Image();
@@ -11,7 +11,17 @@ loadImages(
   "assets/images/coal_ore.png",
   "assets/images/iron_ore.png",
   "assets/images/gold_ore.png"
-)
+)*/
+var images = {
+	this.stone = new Image();
+		this.stone.src = "assets/images/stone.png"
+	this.coalOre = new Image();
+		this.coalOre.src = "assets/images/coal_ore.png"
+	this.ironOre = new Image();
+		this.ironOre.src = "assets/images/iron_ore.png"
+	this.goldOre = new Image();
+		this.goldOre.src = "assets/images/coal_ore.png"
+}
 
 //create the canvas element
 var canvas = document.getElementById("canvas");
@@ -36,7 +46,7 @@ function generateWorld() {
 	var world = []; //create grid
 	for (x = 0; x < worldSize; x++) {
 		world[x] = [];
-		for (y = 0; y < worldSize; y++) {
+		for (y = 0; y < worldSize; y++) {+
 			world[x][y] = 0;
 		}
 	}
