@@ -54,7 +54,7 @@ function generateWorld() {
 generateWorld();
 
 var character = {
-	direction: "down",
+	animation: 1,
 	position: [Math.floor(worldSize / 2) - 0.75, Math.floor(worldSize / 2) - 0.75],
 	image: new Image(),
 	animated: false,
@@ -166,27 +166,13 @@ function drawTiles() {
 }
 
 function drawCharacter() {
-	/*switch(character.direction) {
-		case "up":
-
-			break;
-		case "down":
-
-			break;
-		case "left":
-
-			break;
-		case "right":
-
-			break;
-	}*/
-	ctx.drawImage(character.image, 0, 0, 16, 16, (character.position[0] - cameraPos[0]) * 32, (character.position[1] - cameraPos[1]) * 32, 16, 16)
+	ctx.drawImage(character.image, character.animationPhase * 16, character.animation * 16, 16, 16, (character.position[0] - cameraPos[0]) * 32, (character.position[1] - cameraPos[1]) * 32, 16, 16)
 }
 
 function controlls() {
 	character.animated = false;
 	if (keysDown.includes(87)) {
-		character.direction = "up";
+		character.animation = 0;
 		if (keysDown.includes(68) || keysDown.includes(65)) {
 			if (character.position[1] - 0.0442 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0442)] == air) {
 				character.position[1] -= 0.0442;
@@ -199,7 +185,7 @@ function controlls() {
 		character.animated = true;
 	}
 	if (keysDown.includes(83)) {
-		character.direction = "down";
+		character.animation = 1;
 		if (keysDown.includes(68) || keysDown.includes(65)) {
 			if (character.position[1] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5442)] == air) {
 				character.position[1] += 0.0442;
@@ -211,21 +197,8 @@ function controlls() {
 		}
 		character.animated = true;
 	}
-	if (keysDown.includes(68)) {
-		character.direction = "right";
-		if (keysDown.includes(87) || keysDown.includes(83)) {
-			if (character.position[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] += 0.0442;
-			}
-		} else {
-			if (character.position[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] += 0.0625;
-			}
-		}
-		character.animated = true;
-	}
 	if (keysDown.includes(65)) {
-		character.direction = "left";
+		character.animation = 2;
 		if (keysDown.includes(87) || keysDown.includes(83)) {
 			if (character.position[0] - 0.0442 > 0 && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1] + 0.5)] == air) {
 				character.position[0] -= 0.0442;
@@ -233,6 +206,19 @@ function controlls() {
 		} else {
 			if (character.position[0] - 0.0625 > 0 && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1] + 0.5)] == air) {
 				character.position[0] -= 0.0625;
+			}
+		}
+		character.animated = true;
+	}
+	if (keysDown.includes(68)) {
+		character.animation = 3;
+		if (keysDown.includes(87) || keysDown.includes(83)) {
+			if (character.position[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] += 0.0442;
+			}
+		} else {
+			if (character.position[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] += 0.0625;
 			}
 		}
 		character.animated = true;
@@ -248,9 +234,13 @@ function controlls() {
 	} else if (cameraPos[1] > worldSize - 9) {
 		cameraPos[1] = worldSize - 9;
 	}
-	if (step % 4 == 0 && (character.animated == true || character.animationPhase != 0)) {
-		character.animationPhase++;
-		character.animationPhase %= 4;
+	if (step % 4 == 0) {
+		if (character.animated == true) {
+			character.animationPhase++;
+			character.animationPhase %= 4;
+		} else {
+			character.animationPhase = 0;
+		}
 	}
 }
 
@@ -263,4 +253,4 @@ function tick() {
 	step++;
 	//console.log(test);
 }
-setInterval(tick, 25);
+setInterval(tick, 30);
