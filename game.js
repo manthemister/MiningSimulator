@@ -1,9 +1,9 @@
-//load images in advance
-var images = [];
+//load tile images in advance
+var tileImages = [];
 function loadImages() {
 	for (let i = 0; i < loadImages.arguments.length; i++) {
-		images[i] = new Image();
-		images[i].src = loadImages.arguments[i];
+		tileImages[i] = new Image();
+		tileImages[i].src = loadImages.arguments[i];
 	}
 }
 loadImages(
@@ -19,7 +19,7 @@ const coalOre = 2;
 const ironOre = 3;
 const goldOre = 4;
 
-//create the canvas element
+//get the canvas element
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
@@ -35,13 +35,8 @@ $(document).keyup(function(event){
   keysDown.splice(keysDown.indexOf(event.which), 1);
 });
 
-var cameraPos = [0, 0];
-
 //
-var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?"));
-var generationComplete = false;
-var world = [];
-var oreDensity = 64;
+var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
 function generateWorld() {
  //create grid
 	for (let x = 0; x < worldSize; x++) {
@@ -50,13 +45,22 @@ function generateWorld() {
 			world[x][y] = stone;
 		}
 	}
+	generateOreVeins(coalOre, 2, 8);
+	generateOreVeins(ironOre, 3, 6);
+	generateOreVeins(goldOre, 4, 3);
+	generateCaves();
+	world[Math.floor(worldSize / 2 - 0.75)][Math.floor(worldSize / 2 - 0.75)] = air;
 }
 generateWorld();
-generateOreVeins(coalOre, 2, 8);
-generateOreVeins(ironOre, 3, 6);
-generateOreVeins(goldOre, 4, 3);
-generateCaves();
-generationComplete = true;
+
+var character = {
+	direction: "down",
+	position: [Math.floor(worldSize / 2) - 0.75, Math.floor(worldSize / 2) - 0.75],
+	image: new Image(),
+	animated: false,
+	animationPhase: 0
+}
+character.image.src = "assets/images/Hero.png";
 
 function generateOreVeins(veinType, veinRarity, veinLength) {
 	let veinPos, veinSize, x, y, numVeins = Math.ceil((Math.random() * worldSize * worldSize / (veinRarity * oreDensity)) + worldSize * worldSize / (veinRarity * 1.5 * oreDensity));
@@ -156,30 +160,107 @@ function generateCaves() {
 function drawTiles() {
 	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
 		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
-			ctx.drawImage(images[world[x][y]], (x - cameraPos[0]) * 32, (y - cameraPos[1]) * 32);
+			ctx.drawImage(tileImages[world[x][y]], Math.floor((x - cameraPos[0]) * 32), Math.floor((y - cameraPos[1]) * 32));
 		}
 	}
 }
 
-function moveCamera() {
-	if (keysDown.includes(87) && cameraPos[1] > 0) {
-		cameraPos[1] -= 0.0625;
+function drawCharacter() {
+	/*switch(character.direction) {
+		case "up":
+
+			break;
+		case "down":
+
+			break;
+		case "left":
+
+			break;
+		case "right":
+
+			break;
+	}*/
+	ctx.drawImage(character.image, 0, 0, 16, 16, (character.position[0] - cameraPos[0]) * 32, (character.position[1] - cameraPos[1]) * 32, 16, 16)
+}
+
+function controlls() {
+	character.animated = false;
+	if (keysDown.includes(87)) {
+		character.direction = "up";
+		if (keysDown.includes(68) || keysDown.includes(65)) {
+			if (character.position[1] - 0.0442 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0442)] == air) {
+				character.position[1] -= 0.0442;
+			}
+		} else {
+			if (character.position[1] - 0.0625 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0625)] == air) {
+				character.position[1] -= 0.0625;
+			}
+		}
+		character.animated = true;
 	}
-	if (keysDown.includes(83) && cameraPos[1] < worldSize - 9) {
-		cameraPos[1] += 0.0625;
+	if (keysDown.includes(83)) {
+		character.direction = "down";
+		if (keysDown.includes(68) || keysDown.includes(65)) {
+			if (character.position[1] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5442)] == air) {
+				character.position[1] += 0.0442;
+			}
+		} else {
+			if (character.position[1] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5625)] == air) {
+				character.position[1] += 0.0625;
+			}
+		}
+		character.animated = true;
 	}
-	if (keysDown.includes(68) && cameraPos[0] < worldSize - 13) {
-		cameraPos[0] += 0.0625;
+	if (keysDown.includes(68)) {
+		character.direction = "right";
+		if (keysDown.includes(87) || keysDown.includes(83)) {
+			if (character.position[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] += 0.0442;
+			}
+		} else {
+			if (character.position[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] += 0.0625;
+			}
+		}
+		character.animated = true;
 	}
-	if (keysDown.includes(65) && cameraPos[0] > 0) {
-		cameraPos[0] -= 0.0625;
+	if (keysDown.includes(65)) {
+		character.direction = "left";
+		if (keysDown.includes(87) || keysDown.includes(83)) {
+			if (character.position[0] - 0.0442 > 0 && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] -= 0.0442;
+			}
+		} else {
+			if (character.position[0] - 0.0625 > 0 && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1] + 0.5)] == air) {
+				character.position[0] -= 0.0625;
+			}
+		}
+		character.animated = true;
+	}
+	cameraPos = [character.position[0] - 6.25, character.position[1] - 4.25];
+	if (cameraPos[0] < 0) {
+		cameraPos[0] = 0
+	} else if (cameraPos[0] > worldSize - 13) {
+		cameraPos[0] = worldSize - 13;
+	}
+	if (cameraPos[1] < 0) {
+		cameraPos[1] = 0
+	} else if (cameraPos[1] > worldSize - 9) {
+		cameraPos[1] = worldSize - 9;
+	}
+	if (step % 4 == 0 && (character.animated == true || character.animationPhase != 0)) {
+		character.animationPhase++;
+		character.animationPhase %= 4;
 	}
 }
 
+var step = 0;
 function tick() {
-	moveCamera();
+	controlls();
 	ctx.clearRect(0, 0, 960, 720);
 	drawTiles();
+	drawCharacter();
+	step++;
 	//console.log(test);
 }
 setInterval(tick, 25);
