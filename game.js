@@ -259,8 +259,36 @@ function controllsAndAnimation() {
 }
 
 function useItems() {
-	if (character.using && character.animationPhase == 2 && step % 6 == 0) {
-		//do something
+	switch (character.animation) {
+		case 0:
+			if (character.position[1] >= 1) {
+				if (world[Math.floor(character.position[0] + 0.25)][Math.floor(character.position[1] - 1)] != air) {
+					world[Math.floor(character.position[0] + 0.25)][Math.floor(character.position[1] - 1)] = air;
+				}
+			}
+			break;
+		case 1:
+			if (character.position[1] <= worldSize - 1) {
+				if (world[Math.floor(character.position[0] + 0.25)][Math.floor(character.position[1] + 1.5)] != air) {
+					world[Math.floor(character.position[0] + 0.25)][Math.floor(character.position[1] + 1.5)] = air;
+				}
+			}
+			break;
+		case 2:
+		  if (character.position[0] >= 1) {
+				if (world[Math.floor(character.position[0] - 1)][Math.floor(character.position[1] + 0.25)] != air) {
+					world[Math.floor(character.position[0] - 1)][Math.floor(character.position[1] + 0.25)] = air;
+				}
+			}
+			break;
+		case 3:
+			if (character.position[0] <= worldSize - 1) {
+				if (world[Math.floor(character.position[0] + 1.5)][Math.floor(character.position[1] + 0.25)] != air) {
+					world[Math.floor(character.position[0] + 1.5)][Math.floor(character.position[1] + 0.25)] = air;
+				}
+			}
+
+			break;
 	}
 }
 
@@ -268,7 +296,9 @@ var step = 0;
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
-	useItems()
+	if (character.using && character.animationPhase == 2 && step % 6 == 0) {
+		useItems();
+	}
 	drawTiles();
 	drawCharacter();
 	step++;
