@@ -58,7 +58,8 @@ var character = {
 	position: [Math.floor(worldSize / 2) - 0.75, Math.floor(worldSize / 2) - 0.75],
 	image: new Image(),
 	animated: false,
-	animationPhase: 0
+	animationPhase: 0,
+	using: false
 }
 character.image.src = "assets/Hero.png";
 
@@ -166,62 +167,72 @@ function drawTiles() {
 }
 
 function drawCharacter() {
-	ctx.drawImage(character.image, character.animationPhase * 16, character.animation * 16, 16, 16, Math.floor((character.position[0] - cameraPos[0]) * 32), Math.floor((character.position[1] - cameraPos[1]) * 32), 16, 16)
+	if (character.using) {
+		ctx.drawImage(character.image, character.animationPhase * 16, (character.animation + 4) * 16, 16, 16, Math.floor((character.position[0] - cameraPos[0]) * 32), Math.floor((character.position[1] - cameraPos[1]) * 32), 16, 16);
+	} else {
+		ctx.drawImage(character.image, character.animationPhase * 16, character.animation * 16, 16, 16, Math.floor((character.position[0] - cameraPos[0]) * 32), Math.floor((character.position[1] - cameraPos[1]) * 32), 16, 16);
+	}
 }
 
-function controlls() {
+function controllsAndAnimation() {
 	character.animated = false;
-	if (keysDown.includes(87)) {
-		character.animation = 0;
-		if (keysDown.includes(68) || keysDown.includes(65)) {
-			if (character.position[1] - 0.0442 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0442)] == air) {
-				character.position[1] -= 0.0442;
-			}
-		} else {
-			if (character.position[1] - 0.0625 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0625)] == air) {
-				character.position[1] -= 0.0625;
-			}
-		}
-		character.animated = true;
+	if (keysDown.includes(32) && character.using == false) {
+		character.using = true;
+		character.animationPhase = 0;
 	}
-	if (keysDown.includes(83)) {
-		character.animation = 1;
-		if (keysDown.includes(68) || keysDown.includes(65)) {
-			if (character.position[1] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5442)] == air) {
-				character.position[1] += 0.0442;
+	if (character.using == false) {
+		if (keysDown.includes(87)) {
+			character.animation = 0;
+			if (keysDown.includes(68) || keysDown.includes(65)) {
+				if (character.position[1] - 0.0442 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0442)] == air) {
+					character.position[1] -= 0.0442;
+				}
+			} else {
+				if (character.position[1] - 0.0625 > 0 && world[Math.floor(character.position[0])][Math.floor(character.position[1] - 0.0625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] - 0.0625)] == air) {
+					character.position[1] -= 0.0625;
+				}
 			}
-		} else {
-			if (character.position[1] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5625)] == air) {
-				character.position[1] += 0.0625;
-			}
+			character.animated = true;
 		}
-		character.animated = true;
-	}
-	if (keysDown.includes(65)) {
-		character.animation = 2;
-		if (keysDown.includes(87) || keysDown.includes(83)) {
-			if (character.position[0] - 0.0442 > 0 && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] -= 0.0442;
+		if (keysDown.includes(83)) {
+			character.animation = 1;
+			if (keysDown.includes(68) || keysDown.includes(65)) {
+				if (character.position[1] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5442)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5442)] == air) {
+					character.position[1] += 0.0442;
+				}
+			} else {
+				if (character.position[1] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0])][Math.floor(character.position[1] + 0.5625)] == air && world[Math.floor(character.position[0] + 0.5)][Math.floor(character.position[1] + 0.5625)] == air) {
+					character.position[1] += 0.0625;
+				}
 			}
-		} else {
-			if (character.position[0] - 0.0625 > 0 && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] -= 0.0625;
-			}
+			character.animated = true;
 		}
-		character.animated = true;
-	}
-	if (keysDown.includes(68)) {
-		character.animation = 3;
-		if (keysDown.includes(87) || keysDown.includes(83)) {
-			if (character.position[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] += 0.0442;
+		if (keysDown.includes(65)) {
+			character.animation = 2;
+			if (keysDown.includes(87) || keysDown.includes(83)) {
+				if (character.position[0] - 0.0442 > 0 && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0442)][Math.floor(character.position[1] + 0.5)] == air) {
+					character.position[0] -= 0.0442;
+				}
+			} else {
+				if (character.position[0] - 0.0625 > 0 && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] - 0.0625)][Math.floor(character.position[1] + 0.5)] == air) {
+					character.position[0] -= 0.0625;
+				}
 			}
-		} else {
-			if (character.position[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1] + 0.5)] == air) {
-				character.position[0] += 0.0625;
-			}
+			character.animated = true;
 		}
-		character.animated = true;
+		if (keysDown.includes(68)) {
+			character.animation = 3;
+			if (keysDown.includes(87) || keysDown.includes(83)) {
+				if (character.position[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5442)][Math.floor(character.position[1] + 0.5)] == air) {
+					character.position[0] += 0.0442;
+				}
+			} else {
+				if (character.position[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1])] == air && world[Math.floor(character.position[0] + 0.5625)][Math.floor(character.position[1] + 0.5)] == air) {
+					character.position[0] += 0.0625;
+				}
+			}
+			character.animated = true;
+		}
 	}
 	cameraPos = [character.position[0] - 6.25, character.position[1] - 4.25];
 	if (cameraPos[0] < 0) {
@@ -235,22 +246,31 @@ function controlls() {
 		cameraPos[1] = worldSize - 9;
 	}
 	if (step % 6 == 0) {
-		if (character.animated == true) {
+		if (character.animated || character.using) {
 			character.animationPhase++;
-			character.animationPhase %= 4;
+			if (character.animationPhase >= 4) {
+				character.animationPhase = 0;
+				character.using = false;
+			}
 		} else {
 			character.animationPhase = 0;
 		}
 	}
 }
 
+function useItems() {
+	if (character.using && character.animationPhase == 2 && step % 6 == 0) {
+		//do something
+	}
+}
+
 var step = 0;
 function tick() {
-	controlls();
 	ctx.clearRect(0, 0, 960, 720);
+	controllsAndAnimation();
+	useItems()
 	drawTiles();
 	drawCharacter();
 	step++;
-	//console.log(test);
 }
 setInterval(tick, 30);
