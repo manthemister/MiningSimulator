@@ -7,11 +7,11 @@ function loadImages() {
 	}
 }
 loadImages(
-	"assets/images/stone_background.png",
-	"assets/images/stone.png",
-  "assets/images/coal_ore.png",
-  "assets/images/iron_ore.png",
-  "assets/images/gold_ore.png"
+	"assets/tiles/stone_background.png",
+	"assets/tiles/stone.png",
+  "assets/tiles/coal_ore.png",
+  "assets/tiles/iron_ore.png",
+  "assets/tiles/gold_ore.png"
 );
 const air = 0;
 const stone = 1;
@@ -60,7 +60,7 @@ var character = {
 	animated: false,
 	animationPhase: 0
 }
-character.image.src = "assets/images/Hero.png";
+character.image.src = "assets/Hero.png";
 
 function generateOreVeins(veinType, veinRarity, veinLength) {
 	let veinPos, veinSize, x, y, numVeins = Math.ceil((Math.random() * worldSize * worldSize / (veinRarity * oreDensity)) + worldSize * worldSize / (veinRarity * 1.5 * oreDensity));
