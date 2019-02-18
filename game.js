@@ -166,7 +166,7 @@ function drawTiles() {
 }
 
 function drawCharacter() {
-	ctx.drawImage(character.image, character.animationPhase * 16, character.animation * 16, 16, 16, (character.position[0] - cameraPos[0]) * 32, (character.position[1] - cameraPos[1]) * 32, 16, 16)
+	ctx.drawImage(character.image, character.animationPhase * 16, character.animation * 16, 16, 16, Math.floor((character.position[0] - cameraPos[0]) * 32), Math.floor((character.position[1] - cameraPos[1]) * 32), 16, 16)
 }
 
 function controlls() {
@@ -234,7 +234,7 @@ function controlls() {
 	} else if (cameraPos[1] > worldSize - 9) {
 		cameraPos[1] = worldSize - 9;
 	}
-	if (step % 4 == 0) {
+	if (step % 6 == 0) {
 		if (character.animated == true) {
 			character.animationPhase++;
 			character.animationPhase %= 4;
