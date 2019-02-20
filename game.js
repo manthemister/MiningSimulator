@@ -1,9 +1,12 @@
 //load tile images in advance
-var tileImages = [];
+var tileImages = [], assetsLoaded = 0;
 function loadImages() {
 	for (let i = 0; i < loadImages.arguments.length; i++) {
 		tileImages[i] = new Image();
 		tileImages[i].src = loadImages.arguments[i];
+		$(tileImages[i]).on("load", function() {
+			assetsLoaded++;
+		});
 	}
 }
 loadImages(
@@ -18,6 +21,10 @@ const stone = 1;
 const coalOre = 2;
 const ironOre = 3;
 const goldOre = 4;
+
+$(document.getElementById("music")).on("load", function() {
+	assetsLoaded++;
+});
 
 //get the canvas element
 var canvas = document.getElementById("canvas");
@@ -303,4 +310,12 @@ function tick() {
 	drawCharacter();
 	step++;
 }
-setInterval(tick, 30);
+
+function detectLoaded() {
+	if (assetsLoaded == 6) {
+		clearInterval(loadInterval)
+		setInterval(tick, 30);
+	}
+	console.log(assetsLoaded);
+}
+var loadInterval = setInterval(detectLoaded, 500)
