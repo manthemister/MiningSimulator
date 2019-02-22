@@ -2,7 +2,7 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-//load tile images in advance
+//load tile images
 var tileImages = [], assetsLoaded = 0;
 function loadImages() {
 	for (let i = 0; i < loadImages.arguments.length; i++) {
@@ -26,6 +26,7 @@ const coalOre = 2;
 const ironOre = 3;
 const goldOre = 4;
 
+//load music
 var music = document.getElementById("music");
 music.oncanplaythrough = function() {
 	assetsLoaded++;
@@ -34,7 +35,7 @@ $(document).one('click', function() {
 	music.play();
 });
 
-//determine which keys are pressed at all times using jquery
+//determines which keys are pressed at all times
 var keysDown = [];
 $(document).keydown(function(event){
   if (!keysDown.includes(event.which)) {
@@ -46,10 +47,9 @@ $(document).keyup(function(event){
   keysDown.splice(keysDown.indexOf(event.which), 1);
 });
 
-//
+//generates the world
 var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
 function generateWorld() {
- //create grid
 	for (let x = 0; x < worldSize; x++) {
 		world[x] = [];
 		for (let y = 0; y < worldSize; y++) {
@@ -64,6 +64,7 @@ function generateWorld() {
 }
 generateWorld();
 
+//create character object
 var character = {
 	animation: 1,
 	position: [Math.floor(worldSize / 2) - 0.75, Math.floor(worldSize / 2) - 0.75],
