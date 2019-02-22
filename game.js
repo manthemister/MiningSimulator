@@ -1,3 +1,7 @@
+//get the canvas element
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
 //load tile images in advance
 var tileImages = [], assetsLoaded = 0;
 function loadImages() {
@@ -22,13 +26,13 @@ const coalOre = 2;
 const ironOre = 3;
 const goldOre = 4;
 
-$(document.getElementById("music")).on("load", function() {
+var music = document.getElementById("music");
+music.oncanplaythrough = function() {
 	assetsLoaded++;
+}
+$(document).one('click', function() {
+	music.play();
 });
-
-//get the canvas element
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
 
 //determine which keys are pressed at all times using jquery
 var keysDown = [];
