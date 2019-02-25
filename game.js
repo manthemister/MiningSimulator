@@ -67,7 +67,8 @@ generateWorld();
 //create character object
 var character = {
 	animation: 1,
-	position: [Math.floor(worldSize / 2) - 0.75, Math.floor(worldSize / 2) - 0.75],
+	chunkPos: [0, 0]
+	position: [8, 8],
 	image: new Image(),
 	animated: false,
 	animationPhase: 0,
