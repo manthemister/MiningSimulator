@@ -67,7 +67,7 @@ generateWorld();
 //create character object
 var character = {
 	animation: 1,
-	chunkPos: [0, 0]
+	chunkPos: [0, 0],
 	position: [8, 8],
 	image: new Image(),
 	animated: false,
