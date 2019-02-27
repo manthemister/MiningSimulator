@@ -47,8 +47,57 @@ $(document).keyup(function(event){
   keysDown.splice(keysDown.indexOf(event.which), 1);
 });
 
+//create character object
+var character = {
+	animation: 1,
+	position: [8, 8],
+	image: new Image(),
+	animated: false,
+	animationPhase: 0,
+	using: false
+}
+character.image.src = "assets/Hero.png";
+
+function generateChunk(chunkX, chunkY) {
+	let chunk = {
+		position: [chunkX, xhunkY],
+		tiles: []
+	}
+	for (let x = 0; x < 16; x++) {
+		chunk.tiles[x] = [];
+		for (let y = 0; y < 16; y++) {
+			chunk.tiles[x][y] = [(chunkX * 16) + x, (chunkY * 16) + y, stone]
+		}
+	}
+	for (let i = 0; i < 2; i++) {
+		if (Math.floor(Math.random() * 2) == 0) {
+			let initVeinPos = [Math.floor(Math.random() * 16), Math.floor(Math.random() * 16)], veinPos, veinSize = Math.floor((Math.random() * 2)) + 2;
+			chunk.tiles[veinPos[0]][veinPos[1]][2] = coalOre;
+			for (let i2 = 0; i2 < 4; i2++) {
+				veinPos = initVeinPos
+				for (let i3 = 0; i3 < veinSize; i3++) {
+					let veinMotion = Math.floor(Math.random() * 3.5);
+					if (veinMotion < 3) {
+						if (veinMotion == 1) {
+							veinPos[0] += Math.round(Math.random() * 3 - 1);
+						} else {
+							veinPos[1] += Math.round(Math.random() * 3 - 1);
+						}
+					} else {
+						veinPos[0] += Math.round(Math.random() * 3 - 1);
+						veinPos[1] += Math.round(Math.random() * 3 - 1);
+					}
+					if (/*something*/) {
+						chunk.tiles[veinPos[0]][veinPos[1]][2] = coalOre;
+					}
+				}
+			}
+		}
+	}
+}
+
 //generates the world
-var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
+/*var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
 function generateWorld() {
 	for (let x = 0; x < worldSize; x++) {
 		world[x] = [];
@@ -62,22 +111,10 @@ function generateWorld() {
 	generateCaves();
 	world[Math.floor(worldSize / 2 - 0.75)][Math.floor(worldSize / 2 - 0.75)] = air;
 }
-generateWorld();
+generateWorld();*/
 
-//create character object
-var character = {
-	animation: 1,
-	chunkPos: [0, 0],
-	position: [8, 8],
-	image: new Image(),
-	animated: false,
-	animationPhase: 0,
-	using: false
-}
-character.image.src = "assets/Hero.png";
-
-function generateOreVeins(veinType, veinRarity, veinLength) {
-	let veinPos, veinSize, x, y, numVeins = Math.ceil((Math.random() * worldSize * worldSize / (veinRarity * oreDensity)) + worldSize * worldSize / (veinRarity * 1.5 * oreDensity));
+/*function generateOreVeins(veinType, veinRarity, veinLength) {
+	let veinPos, veinSize, numVeins = Math.ceil((Math.random() * worldSize * worldSize / (veinRarity * oreDensity)) + worldSize * worldSize / (veinRarity * 1.5 * oreDensity));
 	for (let i = 0; i <= numVeins; i++) {
 		veinPos = [Math.floor(Math.random() * (worldSize)), Math.floor(Math.random() * (worldSize))];
 		veinSize = Math.floor((Math.random() * 8) + veinLength);
@@ -169,7 +206,7 @@ function generateCaves() {
 			}
 		}
 	}
-}
+}*/
 
 function drawTiles() {
 	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
