@@ -69,7 +69,7 @@ function isInChunk(x, y) {
 var world = [], wipCoalVeins = [];
 function generateChunk(chunkX, chunkY) {
 	let chunk = {
-		pos: [chunkX, xhunkY],
+		pos: [chunkX, chunkY],
 		tiles: []
 	}
 	for (let x = 0; x < 16; x++) {
@@ -82,7 +82,8 @@ function generateChunk(chunkX, chunkY) {
 	for (let i = 0; i < 2; i++) {
 		if (Math.floor(Math.random() * 2) == 0) {
 			let initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)], veinPos, veinSize = Math.floor((Math.random() * 2)) + 2;
-			chunk.tiles[veinPos[0]][veinPos[1]][2] = coalOre;
+			console.log([initVeinPos, chunk.tiles])
+			chunk.tiles[initVeinPos[0]][initVeinPos[1]][2] = coalOre;
 			for (let i2 = 0; i2 < 4; i2++) {
 				veinPos = initVeinPos
 				for (let i3 = 0; i3 < veinSize; i3++) {
@@ -111,10 +112,32 @@ function generateChunk(chunkX, chunkY) {
 	for (let i = 0; i < wipCoalVeins.length; i++) {
 		if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
 			chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
+			wipCoalVeins.splice(i, 0);
 		}
 	}
 	world.push(chunk);
 }
+
+function drawTiles() {
+	for (let i = 0; i < world.length; i++) {
+		if (world[i].pos[0] >= Math.round(character.pos[0] / 16) - 1 && world[i].pos[0] <= Math.round(character.pos[0] / 16) && world[i].pos[1] >= Math.round(character.pos[1] / 16) - 1 && world[i].pos[1] <= Math.round(character.pos[1] / 16)) {
+			for (let x = 0; x < 16; x++) {
+				for (let y = 0; y < 16; y++) {
+					if (world[i].tiles[x][y][0] > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
+						ctx.drawImage(tileImages[world[i].tiles[x][y][2]], Math.floor((world[i].tiles[x][y][0] - cameraPos[0]) * 32), Math.floor((world[i].tiles[x][y][1] - cameraPos[1]) * 32));
+					}
+				}
+			}
+		}
+	}
+}
+/* function drawTiles() {
+	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
+		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
+			ctx.drawImage(tileImages[world[x][y]], Math.floor((x - cameraPos[0]) * 32), Math.floor((y - cameraPos[1]) * 32));
+		}
+	}
+}*/
 
 //generates the world
 /*var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
@@ -227,14 +250,6 @@ function generateCaves() {
 		}
 	}
 }*/
-
-function drawTiles() {
-	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
-		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
-			ctx.drawImage(tileImages[world[x][y]], Math.floor((x - cameraPos[0]) * 32), Math.floor((y - cameraPos[1]) * 32));
-		}
-	}
-}
 
 function drawCharacter() {
 	if (character.using) {
@@ -363,6 +378,11 @@ function useItems() {
 }
 
 var step = 0;
+for (x = -1; x < 2; x++) {
+	for (y = -1; y < 2; y++) {
+		generateChunk(x, y);
+	}
+}
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
