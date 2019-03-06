@@ -82,8 +82,7 @@ function generateChunk(chunkX, chunkY) {
 	for (let i = 0; i < 2; i++) {
 		if (Math.floor(Math.random() * 2) == 0) {
 			let initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)], veinPos, veinSize = Math.floor((Math.random() * 2)) + 2;
-			console.log([initVeinPos, chunk.tiles])
-			chunk.tiles[initVeinPos[0]][initVeinPos[1]][2] = coalOre;
+			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 			for (let i2 = 0; i2 < 4; i2++) {
 				veinPos = initVeinPos
 				for (let i3 = 0; i3 < veinSize; i3++) {
@@ -111,7 +110,7 @@ function generateChunk(chunkX, chunkY) {
 	}
 	for (let i = 0; i < wipCoalVeins.length; i++) {
 		if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
-			chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
+			chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
 			wipCoalVeins.splice(i, 0);
 		}
 	}
@@ -123,7 +122,7 @@ function drawTiles() {
 		if (world[i].pos[0] >= Math.round(character.pos[0] / 16) - 1 && world[i].pos[0] <= Math.round(character.pos[0] / 16) && world[i].pos[1] >= Math.round(character.pos[1] / 16) - 1 && world[i].pos[1] <= Math.round(character.pos[1] / 16)) {
 			for (let x = 0; x < 16; x++) {
 				for (let y = 0; y < 16; y++) {
-					if (world[i].tiles[x][y][0] > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
+					if (world[i].tiles[x][y][0] + 1 > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] + 1 > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
 						ctx.drawImage(tileImages[world[i].tiles[x][y][2]], Math.floor((world[i].tiles[x][y][0] - cameraPos[0]) * 32), Math.floor((world[i].tiles[x][y][1] - cameraPos[1]) * 32));
 					}
 				}
@@ -259,6 +258,14 @@ function drawCharacter() {
 	}
 }
 
+function getTileInfo(x, y) {
+	for (let i = 0; i < world.length; i++) {
+		if (world[i].pos[0] == Math.floor(x / 16) && world[i].pos[1] == Math.floor(x / 16)) {
+			return world[i].tiles[x - (world[i].pos[0] * 16)][y - (world[i].pos[1] * 16)];
+		}
+	}
+}
+
 function controllsAndAnimation() {
 	character.animated = false;
 	if (keysDown.includes(32) && character.using == false) {
@@ -269,11 +276,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(87)) {
 			character.animation = 0;
 			if (keysDown.includes(68) || keysDown.includes(65)) {
-				if (character.pos[1] - 0.0442 > 0 && world[Math.floor(character.pos[0])][Math.floor(character.pos[1] - 0.0442)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] - 0.0442)] == air) {
+				if (character.pos[1] - 0.0442 > 0 && getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0442))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0442))[2] == air) {
 					character.pos[1] -= 0.0442;
 				}
 			} else {
-				if (character.pos[1] - 0.0625 > 0 && world[Math.floor(character.pos[0])][Math.floor(character.pos[1] - 0.0625)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] - 0.0625)] == air) {
+				if (character.pos[1] - 0.0625 > 0 && getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0625))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0625))[2] == air) {
 					character.pos[1] -= 0.0625;
 				}
 			}
@@ -282,11 +289,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(83)) {
 			character.animation = 1;
 			if (keysDown.includes(68) || keysDown.includes(65)) {
-				if (character.pos[1] + 0.5442 < worldSize + 1 && world[Math.floor(character.pos[0])][Math.floor(character.pos[1] + 0.5442)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] + 0.5442)] == air) {
+				if (getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] + 0.5442))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] + 0.5442))[2] == air) {
 					character.pos[1] += 0.0442;
-				}
+				}   // work here
 			} else {
-				if (character.pos[1] + 0.5625 < worldSize + 1 && world[Math.floor(character.pos[0])][Math.floor(character.pos[1] + 0.5625)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] + 0.5625)] == air) {
+				if (world[Math.floor(character.pos[0])][Math.floor(character.pos[1] + 0.5625)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] + 0.5625)] == air) {
 					character.pos[1] += 0.0625;
 				}
 			}
@@ -308,11 +315,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(68)) {
 			character.animation = 3;
 			if (keysDown.includes(87) || keysDown.includes(83)) {
-				if (character.pos[0] + 0.5442 < worldSize + 1 && world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1] + 0.5)] == air) {
 					character.pos[0] += 0.0442;
 				}
 			} else {
-				if (character.pos[0] + 0.5625 < worldSize + 1 && world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1] + 0.5)] == air) {
 					character.pos[0] += 0.0625;
 				}
 			}
@@ -320,16 +327,6 @@ function controllsAndAnimation() {
 		}
 	}
 	cameraPos = [character.pos[0] - 6.25, character.pos[1] - 4.25];
-	if (cameraPos[0] < 0) {
-		cameraPos[0] = 0
-	} else if (cameraPos[0] > worldSize - 13) {
-		cameraPos[0] = worldSize - 13;
-	}
-	if (cameraPos[1] < 0) {
-		cameraPos[1] = 0
-	} else if (cameraPos[1] > worldSize - 9) {
-		cameraPos[1] = worldSize - 9;
-	}
 	if (step % 6 == 0) {
 		if (character.animated || character.using) {
 			character.animationPhase++;
@@ -353,26 +350,19 @@ function useItems() {
 			}
 			break;
 		case 1:
-			if (character.pos[1] <= worldSize - 1) {
-				if (world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] != air) {
-					world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] = air;
-				}
+			if (world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] != air) {
+				world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] = air;
 			}
 			break;
 		case 2:
-		  if (character.pos[0] >= 1) {
-				if (world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] != air) {
-					world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] = air;
-				}
+			if (world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] != air) {
+				world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] = air;
 			}
 			break;
 		case 3:
-			if (character.pos[0] <= worldSize - 1) {
-				if (world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] != air) {
-					world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] = air;
-				}
+			if (world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] != air) {
+				world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] = air;
 			}
-
 			break;
 	}
 }
@@ -383,6 +373,13 @@ for (x = -1; x < 2; x++) {
 		generateChunk(x, y);
 	}
 }
+for (i = 0; i < world.length; i++) {
+	if (world[i].pos[0] == 0 && world[i].pos[1] == 0) {
+		world[i].tiles[8][8][2] == air;
+		break;
+	}
+}
+console.log(world)
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
