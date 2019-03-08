@@ -50,7 +50,7 @@ $(document).keyup(function(event){
 //create character object
 var character = {
 	animation: 1,
-	pos: [8, 8],
+	pos: [8.25, 8.25],
 	image: new Image(),
 	animated: false,
 	animationPhase: 0,
@@ -120,6 +120,7 @@ function generateChunk(chunkX, chunkY) {
 function drawTiles() {
 	for (let i = 0; i < world.length; i++) {
 		if (world[i].pos[0] >= Math.round(character.pos[0] / 16) - 1 && world[i].pos[0] <= Math.round(character.pos[0] / 16) && world[i].pos[1] >= Math.round(character.pos[1] / 16) - 1 && world[i].pos[1] <= Math.round(character.pos[1] / 16)) {
+			
 			for (let x = 0; x < 16; x++) {
 				for (let y = 0; y < 16; y++) {
 					if (world[i].tiles[x][y][0] + 1 > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] + 1 > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
@@ -130,6 +131,7 @@ function drawTiles() {
 		}
 	}
 }
+
 /* function drawTiles() {
 	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
 		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
@@ -291,9 +293,9 @@ function controllsAndAnimation() {
 			if (keysDown.includes(68) || keysDown.includes(65)) {
 				if (getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] + 0.5442))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] + 0.5442))[2] == air) {
 					character.pos[1] += 0.0442;
-				}   // work here
+				}
 			} else {
-				if (world[Math.floor(character.pos[0])][Math.floor(character.pos[1] + 0.5625)] == air && world[Math.floor(character.pos[0] + 0.5)][Math.floor(character.pos[1] + 0.5625)] == air) {
+				if (getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] + 0.5625))[2]  == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] + 0.5625))[2] == air) {
 					character.pos[1] += 0.0625;
 				}
 			}
@@ -302,11 +304,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(65)) {
 			character.animation = 2;
 			if (keysDown.includes(87) || keysDown.includes(83)) {
-				if (character.pos[0] - 0.0442 > 0 && world[Math.floor(character.pos[0] - 0.0442)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] - 0.0442)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (character.pos[0] - 0.0442 > 0 && getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] -= 0.0442;
 				}
 			} else {
-				if (character.pos[0] - 0.0625 > 0 && world[Math.floor(character.pos[0] - 0.0625)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] - 0.0625)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (character.pos[0] - 0.0625 > 0 && getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] -= 0.0625;
 				}
 			}
@@ -315,11 +317,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(68)) {
 			character.animation = 3;
 			if (keysDown.includes(87) || keysDown.includes(83)) {
-				if (world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5442)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (getTileInfo(Math.floor(character.pos[0] + 0.5442), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5442), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] += 0.0442;
 				}
 			} else {
-				if (world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1])] == air && world[Math.floor(character.pos[0] + 0.5625)][Math.floor(character.pos[1] + 0.5)] == air) {
+				if (getTileInfo(Math.floor(character.pos[0] + 0.5625), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5625), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] += 0.0625;
 				}
 			}
@@ -343,25 +345,23 @@ function controllsAndAnimation() {
 function useItems() {
 	switch (character.animation) {
 		case 0:
-			if (character.pos[1] >= 1) {
-				if (world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] - 1)] != air) {
-					world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] - 1)] = air;
-				}
+			if (getTileInfo(Math.floor(character.pos[0] + 0.25), Math.floor(character.pos[1] - 1))[2] != air) {
+				world[isInChunk(Math.floor(character.pos[0] + 0.25), Math.floor(character.pos[1] - 1))].tiles[Math.floor(character.pos[0] + 0.25) - (Math.floor((character.pos[0] + 0.25) / 16) * 16)][Math.floor(character.pos[1] - 1) - (Math.floor((character.pos[1] - 1) / 16) * 16)][2] = air;
 			}
 			break;
 		case 1:
-			if (world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] != air) {
-				world[Math.floor(character.pos[0] + 0.25)][Math.floor(character.pos[1] + 1.5)] = air;
+			if (getTileInfo(Math.floor(character.pos[0] + 0.25), Math.floor(character.pos[1] + 1.5))[2] != air) {
+				world[isInChunk(Math.floor(character.pos[0] + 0.25), Math.floor(character.pos[1] + 1.5))].tiles[Math.floor(character.pos[0] + 0.25) - (Math.floor((character.pos[0] + 0.25) / 16) * 16)][Math.floor(character.pos[1] + 1.5) - (Math.floor((character.pos[1] + 1.5) / 16) * 16)][2] = air;
 			}
 			break;
 		case 2:
-			if (world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] != air) {
-				world[Math.floor(character.pos[0] - 1)][Math.floor(character.pos[1] + 0.25)] = air;
+			if (getTileInfo(Math.floor(character.pos[0] - 1), Math.floor(character.pos[1] + 0.25))[2] != air) {
+				world[isInChunk(Math.floor(character.pos[0] - 1), Math.floor(character.pos[1] + 0.25))].tiles[Math.floor(character.pos[0] - 1) - (Math.floor((character.pos[0] - 1) / 16) * 16)][Math.floor(character.pos[1] + 0.25) - (Math.floor((character.pos[1] + 0.25) / 16) * 16)][2] = air;
 			}
 			break;
 		case 3:
-			if (world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] != air) {
-				world[Math.floor(character.pos[0] + 1.5)][Math.floor(character.pos[1] + 0.25)] = air;
+			if (getTileInfo(Math.floor(character.pos[0] + 1.5), Math.floor(character.pos[1] + 0.25))[2] != air) {
+				world[isInChunk(Math.floor(character.pos[0] + 1.5), Math.floor(character.pos[1] + 0.25))].tiles[Math.floor(character.pos[0] + 1.5) - (Math.floor((character.pos[0] + 1.5) / 16) * 16)][Math.floor(character.pos[1] + 0.25) - (Math.floor((character.pos[1] + 0.25) / 16) * 16)][2] = air;
 			}
 			break;
 	}
@@ -375,7 +375,7 @@ for (x = -1; x < 2; x++) {
 }
 for (i = 0; i < world.length; i++) {
 	if (world[i].pos[0] == 0 && world[i].pos[1] == 0) {
-		world[i].tiles[8][8][2] == air;
+		world[i].tiles[8][8][2] = air;
 		break;
 	}
 }
