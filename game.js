@@ -102,16 +102,19 @@ function generateChunk(chunkX, chunkY) {
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = coalOre;
 				  } else {
-						wipCoalVeins.push(veinPos)
+						wipCoalVeins.push(veinPos);
+						console.log(veinPos);
 					}
 				}
 			}
 		}
 	}
 	for (let i = 0; i < wipCoalVeins.length; i++) {
-		if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
-			chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
-			wipCoalVeins.splice(i, 0);
+		if (wipCoalVeins[i][0] !== false) {
+			if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
+				wipCoalVeins[i][0] = false;
+			}
 		}
 	}
 	world.push(chunk);
@@ -379,7 +382,7 @@ for (i = 0; i < world.length; i++) {
 		break;
 	}
 }
-console.log(world)
+console.log(wipCoalVeins);
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
