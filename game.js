@@ -95,7 +95,7 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = coalOre;
-				  } else {
+				  } else if (wipCoalVeins.includes(veinPos) == false) {
 						wipCoalVeins.push(veinPos);
 					}
 				}
@@ -133,7 +133,7 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = ironOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = ironOre;
-				  } else {
+				  } else if (wipIronVeins.includes(veinPos) == false) {
 						wipIronVeins.push(veinPos);
 					}
 				}
@@ -171,7 +171,7 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = goldOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = goldOre;
-				  } else {
+				  } else if (wipGoldVeins.includes(veinPos) == false) {
 						wipGoldVeins.push(veinPos);
 					}
 				}
