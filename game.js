@@ -73,14 +73,12 @@ function generateChunk(chunkX, chunkY) {
 		}
 	}
 	//generate coal veins
-	var initVeinPos;
 	for (let i = 0; i < 3; i++) {
 		if (Math.floor(Math.random() * 2) == 0) {
-			let veinSize = Math.floor((Math.random() * 2)) + 2;
-			initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
+			let veinSize = Math.floor((Math.random() * 2)) + 2, initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
 			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 			for (let i2 = 0; i2 < 4; i2++) {
-				veinPos = $.extend({}, initVeinPos)
+				veinPos = $.extend([], initVeinPos)
 				for (let i3 = 0; i3 < veinSize; i3++) {
 					let veinMotion = Math.floor(Math.random() * 2.5);
 					if (veinMotion < 2) {
@@ -116,9 +114,9 @@ function generateChunk(chunkX, chunkY) {
 }
 
 function drawTiles() {
+	let chunksDrawn = 0;
 	for (let i = 0; i < world.length; i++) {
 		if (world[i].pos[0] >= Math.round(character.pos[0] / 16) - 1 && world[i].pos[0] <= Math.round(character.pos[0] / 16) && world[i].pos[1] >= Math.round(character.pos[1] / 16) - 1 && world[i].pos[1] <= Math.round(character.pos[1] / 16)) {
-
 			for (let x = 0; x < 16; x++) {
 				for (let y = 0; y < 16; y++) {
 					if (world[i].tiles[x][y][0] + 1 > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] + 1 > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
@@ -126,61 +124,17 @@ function drawTiles() {
 					}
 				}
 			}
-		}
-	}
-}
-
-/* function drawTiles() {
-	for (let x = Math.floor(cameraPos[0]); x < cameraPos[0] + 13; x++) {
-		for (let y = Math.floor(cameraPos[1]); y < cameraPos[1] + 9; y++) {
-			ctx.drawImage(tileImages[world[x][y]], Math.floor((x - cameraPos[0]) * 32), Math.floor((y - cameraPos[1]) * 32));
-		}
-	}
-}*/
-
-//generates the world
-/*var worldSize = parseInt(prompt("How big is the world (enter an integer greater than or equal to 13)?")), world = [], oreDensity = 64;
-function generateWorld() {
-	for (let x = 0; x < worldSize; x++) {
-		world[x] = [];
-		for (let y = 0; y < worldSize; y++) {
-			world[x][y] = stone;
-		}
-	}
-	generateOreVeins(coalOre, 2, 8);
-	generateOreVeins(ironOre, 3, 6);
-	generateOreVeins(goldOre, 4, 3);
-	generateCaves();
-	world[Math.floor(worldSize / 2 - 0.75)][Math.floor(worldSize / 2 - 0.75)] = air;
-}
-generateWorld();*/
-
-/*function generateOreVeins(veinType, veinRarity, veinLength) {
-	let veinPos, veinSize, numVeins = Math.ceil((Math.random() * worldSize * worldSize / (veinRarity * oreDensity)) + worldSize * worldSize / (veinRarity * 1.5 * oreDensity));
-	for (let i = 0; i <= numVeins; i++) {
-		veinPos = [Math.floor(Math.random() * (worldSize)), Math.floor(Math.random() * (worldSize))];
-		veinSize = Math.floor((Math.random() * 8) + veinLength);
-		world[veinPos[0]][veinPos[1]] = veinType;
-		for (let i2 = 0; i2 <= veinSize; i2++) {
-			let veinMotion = Math.floor(Math.random() * 3.5);
-			if (veinMotion < 3) {
-				if (veinMotion == 1) {
-					veinPos[0] += Math.round(Math.random() * 3 - 1);
-				} else {
-					veinPos[1] += Math.round(Math.random() * 3 - 1);
-				}
-			} else {
-				veinPos[0] += Math.round(Math.random() * 3 - 1);
-				veinPos[1] += Math.round(Math.random() * 3 - 1);
+			chunksDrawn += 1;
+			if (chunksDrawn == 4) {
+				break;
 			}
-			if (veinPos[0] >= 0 && veinPos[0] <= worldSize -1 && veinPos[1] >= 0 && veinPos[1] <= worldSize - 1) {
-				world[veinPos[0]][veinPos[1]] = veinType;
-			}
+			world.unshift(world[i])
+			world.splice(i + 1, 1)
 		}
 	}
 }
 
-function generateCaves() {
+/*function generateCaves() {
 	let caveDirection, caveWidth, cavePos, caveLength, tilePos, numCaves = Math.floor(Math.random() * worldSize / 8 + (worldSize / 13));
 	for (let i = 0; i <= numCaves; i++) {
 		caveDirection = Math.floor(Math.random() * 8);
