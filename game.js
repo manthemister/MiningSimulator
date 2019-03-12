@@ -261,6 +261,16 @@ function getTileInfo(x, y) {
 	}
 }
 
+function genNewChunks() {
+	for (let x = -1; x < 2; x++) {
+		for (let y = -1; y < 2; y++) {
+			if (isInChunk(character.pos[0] + (x * 16), character.pos[1] + (y * 16)) === false) {
+				generateChunk(Math.floor((character.pos[0] + (x * 16)) / 16), Math.floor((character.pos[1] + (y * 16)) / 16))
+			}
+		}
+	}
+}
+
 function controllsAndAnimation() {
 	character.animated = false;
 	if (keysDown.includes(32) && character.using == false) {
@@ -375,6 +385,7 @@ for (i = 0; i < world.length; i++) {
 var step = 0;
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
+	genNewChunks();
 	controllsAndAnimation();
 	if (character.using && character.animationPhase == 2 && step % 6 == 0) {
 		useItems();
