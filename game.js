@@ -68,7 +68,6 @@ function isInChunk(x, y) {
 }
 var world = [], wipCoalVeins = [];
 function generateChunk(chunkX, chunkY) {
-	console.log("chunk " + world.length)
 	let chunk = {
 		pos: [chunkX, chunkY],
 		tiles: []
@@ -85,18 +84,9 @@ function generateChunk(chunkX, chunkY) {
 		if (Math.floor(Math.random() * 2) == 0) {
 			let veinSize = Math.floor((Math.random() * 2)) + 2;
 			initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
-			console.log("vein");
-			console.log(initVeinPos)
 			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 			for (let i2 = 0; i2 < 4; i2++) {
-<<<<<<< HEAD
-				let veinPos = $.extend({}, initVeinPos);
-				console.log("strand");
-				console.log(initVeinPos);
-				console.log(veinPos);
-=======
 				veinPos = $.extend({}, initVeinPos)
->>>>>>> 5741fa49300ddf8152fe43d798e9d943eceed8bb
 				for (let i3 = 0; i3 < veinSize; i3++) {
 					let veinMotion = Math.floor(Math.random() * 2.5);
 					if (veinMotion < 2) {
@@ -109,36 +99,23 @@ function generateChunk(chunkX, chunkY) {
 						veinPos[0] += Math.floor(Math.random() * 3 - 1);
 						veinPos[1] += Math.floor(Math.random() * 3 - 1);
 					}
-					console.log(veinPos);
 					if (veinPos[0] - (chunk.pos[0] * 16) >= 0 && veinPos[0]  - (chunk.pos[0] * 16) < 16 && veinPos[1]  - (chunk.pos[1] * 16) >= 0 && veinPos[1] - (chunk.pos[1] * 16) < 16) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
-<<<<<<< HEAD
-						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - (world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16)][veinPos[1] - (world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16)][2] = coalOre;
-=======
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = coalOre;
->>>>>>> 5741fa49300ddf8152fe43d798e9d943eceed8bb
 				  } else {
 						wipCoalVeins.push(veinPos);
-						console.log(veinPos);
 					}
 				}
 			}
 		}
 	}
 	for (let i = 0; i < wipCoalVeins.length; i++) {
-<<<<<<< HEAD
-		if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
-			chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
-			wipCoalVeins.splice(i, 0);
-			//i -= 1;
-=======
 		if (wipCoalVeins[i][0] !== false) {
 			if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
 				chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
 				wipCoalVeins[i][0] = false;
 			}
->>>>>>> 5741fa49300ddf8152fe43d798e9d943eceed8bb
 		}
 	}
 	world.push(chunk);
@@ -270,11 +247,6 @@ function generateCaves() {
 					}
 				}
 			}
-			if (cavePos[0] >= 0 && cavePos[0] < worldSize && cavePos[1] >= 0 && cavePos[1] < worldSize) {
-				if (world[cavePos[0]][cavePos[1]] != air) {
-					console.log(cavePos)
-				}
-			}
 		}
 	}
 }*/
@@ -394,7 +366,6 @@ function useItems() {
 	}
 }
 
-var step = 0;
 for (x = -1; x < 2; x++) {
 	for (y = -1; y < 2; y++) {
 		generateChunk(x, y);
@@ -406,12 +377,8 @@ for (i = 0; i < world.length; i++) {
 		break;
 	}
 }
-<<<<<<< HEAD
-console.log(world)
-var givePos = false;
-=======
-console.log(wipCoalVeins);
->>>>>>> 5741fa49300ddf8152fe43d798e9d943eceed8bb
+
+var step = 0;
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
@@ -420,11 +387,7 @@ function tick() {
 	}
 	drawTiles();
 	drawCharacter();
-<<<<<<< HEAD
-	document.getElementById("location").innerHTML = "x: " + Math.floor(character.pos[0]) + " y: " + Math.floor(character.pos[1]);
-=======
 	document.getElementById("position").innerHTML = "x: " + (Math.floor(character.pos[0] * 100) / 100) + " y: " + (Math.floor(character.pos[1] * 100) / 100);
->>>>>>> 5741fa49300ddf8152fe43d798e9d943eceed8bb
 	step++;
 }
 setInterval(tick, 30);
