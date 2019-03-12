@@ -8,9 +8,6 @@ function loadImages() {
 	for (let i = 0; i < loadImages.arguments.length; i++) {
 		tileImages[i] = new Image();
 		tileImages[i].src = loadImages.arguments[i];
-		$(tileImages[i]).on("load", function() {
-			assetsLoaded++;
-		});
 	}
 }
 loadImages(
@@ -28,9 +25,6 @@ const goldOre = 4;
 
 //load music
 var music = document.getElementById("music");
-music.oncanplaythrough = function() {
-	assetsLoaded++;
-}
 $(document).one('click', function() {
 	music.play();
 });
