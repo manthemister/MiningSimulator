@@ -68,6 +68,7 @@ function isInChunk(x, y) {
 }
 var world = [], wipCoalVeins = [];
 function generateChunk(chunkX, chunkY) {
+	console.log("chunk " + world.length)
 	let chunk = {
 		pos: [chunkX, chunkY],
 		tiles: []
@@ -79,28 +80,36 @@ function generateChunk(chunkX, chunkY) {
 		}
 	}
 	//generate coal veins
-	for (let i = 0; i < 2; i++) {
+	var initVeinPos;
+	for (let i = 0; i < 3; i++) {
 		if (Math.floor(Math.random() * 2) == 0) {
-			let initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)], veinPos, veinSize = Math.floor((Math.random() * 2)) + 2;
+			let veinSize = Math.floor((Math.random() * 2)) + 2;
+			initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
+			console.log("vein");
+			console.log(initVeinPos)
 			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 			for (let i2 = 0; i2 < 4; i2++) {
-				veinPos = initVeinPos
+				let veinPos = $.extend({}, initVeinPos);
+				console.log("strand");
+				console.log(initVeinPos);
+				console.log(veinPos);
 				for (let i3 = 0; i3 < veinSize; i3++) {
-					let veinMotion = Math.floor(Math.random() * 3.5);
-					if (veinMotion < 3) {
+					let veinMotion = Math.floor(Math.random() * 2.5);
+					if (veinMotion < 2) {
 						if (veinMotion == 1) {
-							veinPos[0] += Math.round(Math.random() * 3 - 1);
+							veinPos[0] += Math.floor(Math.random() * 3 - 1);
 						} else {
-							veinPos[1] += Math.round(Math.random() * 3 - 1);
+							veinPos[1] += Math.floor(Math.random() * 3 - 1);
 						}
 					} else {
-						veinPos[0] += Math.round(Math.random() * 3 - 1);
-						veinPos[1] += Math.round(Math.random() * 3 - 1);
+						veinPos[0] += Math.floor(Math.random() * 3 - 1);
+						veinPos[1] += Math.floor(Math.random() * 3 - 1);
 					}
+					console.log(veinPos);
 					if (veinPos[0] - (chunk.pos[0] * 16) >= 0 && veinPos[0]  - (chunk.pos[0] * 16) < 16 && veinPos[1]  - (chunk.pos[1] * 16) >= 0 && veinPos[1] - (chunk.pos[1] * 16) < 16) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
-						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0]][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1]][2] = coalOre;
+						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - (world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16)][veinPos[1] - (world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16)][2] = coalOre;
 				  } else {
 						wipCoalVeins.push(veinPos)
 					}
@@ -112,6 +121,7 @@ function generateChunk(chunkX, chunkY) {
 		if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
 			chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
 			wipCoalVeins.splice(i, 0);
+			//i -= 1;
 		}
 	}
 	world.push(chunk);
@@ -120,7 +130,7 @@ function generateChunk(chunkX, chunkY) {
 function drawTiles() {
 	for (let i = 0; i < world.length; i++) {
 		if (world[i].pos[0] >= Math.round(character.pos[0] / 16) - 1 && world[i].pos[0] <= Math.round(character.pos[0] / 16) && world[i].pos[1] >= Math.round(character.pos[1] / 16) - 1 && world[i].pos[1] <= Math.round(character.pos[1] / 16)) {
-			
+
 			for (let x = 0; x < 16; x++) {
 				for (let y = 0; y < 16; y++) {
 					if (world[i].tiles[x][y][0] + 1 > cameraPos[0] && world[i].tiles[x][y][0] < cameraPos[0] + 13 && world[i].tiles[x][y][1] + 1 > cameraPos[1] && world[i].tiles[x][y][1] < cameraPos[1] + 9) {
@@ -262,8 +272,8 @@ function drawCharacter() {
 
 function getTileInfo(x, y) {
 	for (let i = 0; i < world.length; i++) {
-		if (world[i].pos[0] == Math.floor(x / 16) && world[i].pos[1] == Math.floor(x / 16)) {
-			return world[i].tiles[x - (world[i].pos[0] * 16)][y - (world[i].pos[1] * 16)];
+		if (world[i].pos[0] == Math.floor(x / 16) && world[i].pos[1] == Math.floor(y / 16)) {
+			return world[i].tiles[x - (Math.floor(x / 16) * 16)][y - (Math.floor(y / 16) * 16)];
 		}
 	}
 }
@@ -278,11 +288,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(87)) {
 			character.animation = 0;
 			if (keysDown.includes(68) || keysDown.includes(65)) {
-				if (character.pos[1] - 0.0442 > 0 && getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0442))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0442))[2] == air) {
+				if (getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0442))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0442))[2] == air) {
 					character.pos[1] -= 0.0442;
 				}
 			} else {
-				if (character.pos[1] - 0.0625 > 0 && getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0625))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0625))[2] == air) {
+				if (getTileInfo(Math.floor(character.pos[0]), Math.floor(character.pos[1] - 0.0625))[2] == air && getTileInfo(Math.floor(character.pos[0] + 0.5), Math.floor(character.pos[1] - 0.0625))[2] == air) {
 					character.pos[1] -= 0.0625;
 				}
 			}
@@ -304,11 +314,11 @@ function controllsAndAnimation() {
 		if (keysDown.includes(65)) {
 			character.animation = 2;
 			if (keysDown.includes(87) || keysDown.includes(83)) {
-				if (character.pos[0] - 0.0442 > 0 && getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1] + 0.5))[2] == air) {
+				if (getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0442), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] -= 0.0442;
 				}
 			} else {
-				if (character.pos[0] - 0.0625 > 0 && getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1] + 0.5))[2] == air) {
+				if (getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1]))[2] == air && getTileInfo(Math.floor(character.pos[0] - 0.0625), Math.floor(character.pos[1] + 0.5))[2] == air) {
 					character.pos[0] -= 0.0625;
 				}
 			}
@@ -380,6 +390,7 @@ for (i = 0; i < world.length; i++) {
 	}
 }
 console.log(world)
+var givePos = false;
 function tick() {
 	ctx.clearRect(0, 0, 960, 720);
 	controllsAndAnimation();
@@ -388,14 +399,7 @@ function tick() {
 	}
 	drawTiles();
 	drawCharacter();
+	document.getElementById("location").innerHTML = "x: " + Math.floor(character.pos[0]) + " y: " + Math.floor(character.pos[1]);
 	step++;
 }
-
-function detectLoaded() {
-	if (assetsLoaded == 6) {
-		clearInterval(loadInterval)
-		setInterval(tick, 30);
-	}
-	console.log(assetsLoaded);
-}
-var loadInterval = setInterval(detectLoaded, 500)
+setInterval(tick, 30);
