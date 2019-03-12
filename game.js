@@ -60,7 +60,7 @@ function isInChunk(x, y) {
 	}
 	return false;
 }
-var world = [], wipCoalVeins = [];
+var world = [], wipCoalVeins = [], wipIronVeins = [], wipGoldVeins = [];
 function generateChunk(chunkX, chunkY) {
 	let chunk = {
 		pos: [chunkX, chunkY],
@@ -73,7 +73,7 @@ function generateChunk(chunkX, chunkY) {
 		}
 	}
 	//generate coal veins
-	for (let i = 0; i < 3; i++) {
+	for (let i = 0; i < 4; i++) {
 		if (Math.floor(Math.random() * 2) == 0) {
 			let veinSize = Math.floor((Math.random() * 2)) + 2, initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
 			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
@@ -107,6 +107,82 @@ function generateChunk(chunkX, chunkY) {
 			if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
 				chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
 				wipCoalVeins[i][0] = false;
+			}
+		}
+	}
+	//generate iron veins
+	for (let i = 0; i < 3; i++) {
+		if (Math.floor(Math.random() * 2) == 0) {
+			let veinSize = Math.floor((Math.random() * 2)) + 1, initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
+			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = ironOre;
+			for (let i2 = 0; i2 < 4; i2++) {
+				veinPos = $.extend([], initVeinPos)
+				for (let i3 = 0; i3 < veinSize; i3++) {
+					let veinMotion = Math.floor(Math.random() * 2.5);
+					if (veinMotion < 2) {
+						if (veinMotion == 1) {
+							veinPos[0] += Math.floor(Math.random() * 3 - 1);
+						} else {
+							veinPos[1] += Math.floor(Math.random() * 3 - 1);
+						}
+					} else {
+						veinPos[0] += Math.floor(Math.random() * 3 - 1);
+						veinPos[1] += Math.floor(Math.random() * 3 - 1);
+					}
+					if (veinPos[0] - (chunk.pos[0] * 16) >= 0 && veinPos[0]  - (chunk.pos[0] * 16) < 16 && veinPos[1]  - (chunk.pos[1] * 16) >= 0 && veinPos[1] - (chunk.pos[1] * 16) < 16) {
+						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = ironOre;
+					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
+						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = ironOre;
+				  } else {
+						wipIronVeins.push(veinPos);
+					}
+				}
+			}
+		}
+	}
+	for (let i = 0; i < wipIronVeins.length; i++) {
+		if (wipIronVeins[i][0] !== false) {
+			if (Math.floor(wipIronVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipIronVeins[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipIronVeins[i][0] - (chunk.pos[0] * 16)][wipIronVeins[i][1] - (chunk.pos[1] * 16)][2] = ironOre;
+				wipIronVeins[i][0] = false;
+			}
+		}
+	}
+	//generate gold veins
+	for (let i = 0; i < 2; i++) {
+		if (Math.floor(Math.random() * 2) == 0) {
+			let veinSize = Math.floor((Math.random() * 2)) + 1, initVeinPos = [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)];
+			chunk.tiles[initVeinPos[0] - (chunk.pos[0] * 16)][initVeinPos[1] - (chunk.pos[1] * 16)][2] = goldOre;
+			for (let i2 = 0; i2 < 4; i2++) {
+				veinPos = $.extend([], initVeinPos)
+				for (let i3 = 0; i3 < veinSize; i3++) {
+					let veinMotion = Math.floor(Math.random() * 2.5);
+					if (veinMotion < 2) {
+						if (veinMotion == 1) {
+							veinPos[0] += Math.floor(Math.random() * 3 - 1);
+						} else {
+							veinPos[1] += Math.floor(Math.random() * 3 - 1);
+						}
+					} else {
+						veinPos[0] += Math.floor(Math.random() * 3 - 1);
+						veinPos[1] += Math.floor(Math.random() * 3 - 1);
+					}
+					if (veinPos[0] - (chunk.pos[0] * 16) >= 0 && veinPos[0]  - (chunk.pos[0] * 16) < 16 && veinPos[1]  - (chunk.pos[1] * 16) >= 0 && veinPos[1] - (chunk.pos[1] * 16) < 16) {
+						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = goldOre;
+					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
+						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = goldOre;
+				  } else {
+						wipGoldVeins.push(veinPos);
+					}
+				}
+			}
+		}
+	}
+	for (let i = 0; i < wipGoldVeins.length; i++) {
+		if (wipGoldVeins[i][0] !== false) {
+			if (Math.floor(wipGoldVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipGoldVeins[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipGoldVeins[i][0] - (chunk.pos[0] * 16)][wipGoldVeins[i][1] - (chunk.pos[1] * 16)][2] = goldOre;
+				wipGoldVeins[i][0] = false;
 			}
 		}
 	}
