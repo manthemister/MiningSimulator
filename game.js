@@ -60,7 +60,7 @@ function isInChunk(x, y) {
 	}
 	return false;
 }
-var world = [], wipCoalVeins = [], wipIronVeins = [], wipGoldVeins = [];
+var world = [], wipCoal = [], wipIron = [], wipGold = [], wipAir = [];
 function generateChunk(chunkX, chunkY) {
 	let chunk = {
 		pos: [chunkX, chunkY],
@@ -95,18 +95,18 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = coalOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = coalOre;
-				  } else if (wipCoalVeins.includes(veinPos) == false) {
-						wipCoalVeins.push(veinPos);
+				  } else if (wipCoal.includes(veinPos) == false) {
+						wipCoal.push(veinPos);
 					}
 				}
 			}
 		}
 	}
-	for (let i = 0; i < wipCoalVeins.length; i++) {
-		if (wipCoalVeins[i][0] !== false) {
-			if (Math.floor(wipCoalVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoalVeins[i][1] / 16) == chunk.pos[1]) {
-				chunk.tiles[wipCoalVeins[i][0] - (chunk.pos[0] * 16)][wipCoalVeins[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
-				wipCoalVeins[i][0] = false;
+	for (let i = 0; i < wipCoal.length; i++) {
+		if (wipCoal[i][0] !== false) {
+			if (Math.floor(wipCoal[i][0] / 16) == chunk.pos[0] && Math.floor(wipCoal[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipCoal[i][0] - (chunk.pos[0] * 16)][wipCoal[i][1] - (chunk.pos[1] * 16)][2] = coalOre;
+				wipCoal[i][0] = false;
 			}
 		}
 	}
@@ -133,18 +133,18 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = ironOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = ironOre;
-				  } else if (wipIronVeins.includes(veinPos) == false) {
-						wipIronVeins.push(veinPos);
+				  } else if (wipIron.includes(veinPos) == false) {
+						wipIron.push(veinPos);
 					}
 				}
 			}
 		}
 	}
-	for (let i = 0; i < wipIronVeins.length; i++) {
-		if (wipIronVeins[i][0] !== false) {
-			if (Math.floor(wipIronVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipIronVeins[i][1] / 16) == chunk.pos[1]) {
-				chunk.tiles[wipIronVeins[i][0] - (chunk.pos[0] * 16)][wipIronVeins[i][1] - (chunk.pos[1] * 16)][2] = ironOre;
-				wipIronVeins[i][0] = false;
+	for (let i = 0; i < wipIron.length; i++) {
+		if (wipIron[i][0] !== false) {
+			if (Math.floor(wipIron[i][0] / 16) == chunk.pos[0] && Math.floor(wipIron[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipIron[i][0] - (chunk.pos[0] * 16)][wipIron[i][1] - (chunk.pos[1] * 16)][2] = ironOre;
+				wipIron[i][0] = false;
 			}
 		}
 	}
@@ -171,19 +171,77 @@ function generateChunk(chunkX, chunkY) {
 						chunk.tiles[veinPos[0] - (chunk.pos[0] * 16)][veinPos[1] - (chunk.pos[1] * 16)][2] = goldOre;
 					} else if (isInChunk(veinPos[0], veinPos[1]) !== false) {
 						world[isInChunk(veinPos[0], veinPos[1])].tiles[veinPos[0] - world[isInChunk(veinPos[0], veinPos[1])].pos[0] * 16][veinPos[1] - world[isInChunk(veinPos[0], veinPos[1])].pos[1] * 16][2] = goldOre;
-				  } else if (wipGoldVeins.includes(veinPos) == false) {
-						wipGoldVeins.push(veinPos);
+				  } else if (wipGold.includes(veinPos) == false) {
+						wipGold.push(veinPos);
 					}
 				}
 			}
 		}
 	}
-	for (let i = 0; i < wipGoldVeins.length; i++) {
-		if (wipGoldVeins[i][0] !== false) {
-			if (Math.floor(wipGoldVeins[i][0] / 16) == chunk.pos[0] && Math.floor(wipGoldVeins[i][1] / 16) == chunk.pos[1]) {
-				chunk.tiles[wipGoldVeins[i][0] - (chunk.pos[0] * 16)][wipGoldVeins[i][1] - (chunk.pos[1] * 16)][2] = goldOre;
-				wipGoldVeins[i][0] = false;
+	for (let i = 0; i < wipGold.length; i++) {
+		if (wipGold[i][0] !== false) {
+			if (Math.floor(wipGold[i][0] / 16) == chunk.pos[0] && Math.floor(wipGold[i][1] / 16) == chunk.pos[1]) {
+				chunk.tiles[wipGold[i][0] - (chunk.pos[0] * 16)][wipGold[i][1] - (chunk.pos[1] * 16)][2] = goldOre;
+				wipGold[i][0] = false;
 			}
+		}
+	}
+	//caves
+	if (Math.random() * 1.1 >= 1) {
+		for (let i = 0; i < 8; i++) {
+			let direction = Math.floor(Math.random() * 8);
+			switch (direction) {
+				case 0:
+					if (isInChunk((chunk.pos[0] + 1) * 16, chunk.pos[1] * 16) === false) {
+						continue;
+					}
+					break;
+				case 1:
+					if (isInChunk((chunk.pos[0] + 1) * 16, (chunk.pos[1] + 1) * 16) === false) {
+						continue;
+					}
+					break;
+				case 2:
+					if (isInChunk(chunk.pos[0] * 16, (chunk.pos[1] + 1) * 16) === false) {
+						continue;
+					}
+					break;
+				case 3:
+					if (isInChunk((chunk.pos[0] - 1) * 16, (chunk.pos[1] + 1) * 16) === false) {
+						continue;
+					}
+					break;
+				case 4:
+					if (isInChunk((chunk.pos[0] - 1) * 16, chunk.pos[1] * 16) === false) {
+						continue;
+					}
+					break;
+				case 5:
+					if (isInChunk((chunk.pos[0] - 1) * 16, (chunk.pos[1] - 1) * 16) === false) {
+						continue;
+					}
+					break;
+				case 6:
+					if (isInChunk(chunk.pos[0] * 16, (chunk.pos[1] - 1) * 16) === false) {
+						continue;
+					}
+					break;
+				case 7:
+					if (isInChunk((chunk.pos[0] + 1) * 16, (chunk.pos[1] - 1) * 16) === false) {
+						continue;
+					}
+					break;
+			}
+			//do stuff below
+			let cave = {
+				length: Math.floor((Math.random() * 128) + 128),
+				width: Math.random() + 1
+				pos: [(chunk.pos[0] * 16) + Math.floor(Math.random() * 16), (chunk.pos[1] * 16) + Math.floor(Math.random() * 16)],
+				motion: direction
+			}
+			for (let x = )
+			//do stuff above
+			break;
 		}
 	}
 	world.push(chunk);
@@ -201,7 +259,7 @@ function drawTiles() {
 				}
 			}
 			chunksDrawn += 1;
-			if (chunksDrawn == 4) {
+			if (chunksDrawn >= 4) {
 				break;
 			}
 			world.unshift(world[i])
@@ -244,8 +302,8 @@ function drawTiles() {
 					cavePos[1] += 1;
 					break;
 				case 3:
-					cavePos[1] += 1;
 					cavePos[0] -= 1;
+					cavePos[1] += 1;
 					break;
 				case 4:
 					cavePos[0] -= 1;
@@ -258,8 +316,8 @@ function drawTiles() {
 					cavePos[1] -= 1;
 					break;
 				case 7:
-					cavePos[1] -= 1;
 					cavePos[0] += 1;
+					cavePos[1] -= 1;
 					break;
 			}
 			for (let x = cavePos[0] - Math.floor(caveWidth); x <= cavePos[0] + Math.floor(caveWidth); x++) {
